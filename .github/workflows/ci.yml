@@ -1,0 +1,40 @@
+name: Continuous Integration
+
+on: [push]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        shared: [0, 1]
+
+        include:
+        - { shared: 0, triplet: x64-windows-static, rt: "" }
+        - { shared: 1, triplet: x64-windows, rt: DLL }
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install vcpkg
+      uses: friendlyanon/setup-vcpkg@v1
+      with: { committish: 14543ba18235846803ab1d3534cf2f63c6024b20 }
+
+    - name: Configure
+      run: "cmake --preset=ci-windows
+        -D BUILD_SHARED_LIBS=${{ matrix.shared }}
+        -D VCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
+        -D CMAKE_POLICY_DEFAULT_CMP0091=NEW
+        -D CMAKE_MSVC_RUNTIME_LIBRARY=\
+        MultiThreaded$<$<CONFIG:Debug>:Debug>${{ matrix.rt }}"
+
+    - name: Build
+      run: cmake --build build --config Release -j 2
+
+    - name: Install
+      run: cmake --install build --config Release --prefix prefix
+
+    - name: Test
+      working-directory: build
+      run: ctest --output-on-failure -C Release -j 2
