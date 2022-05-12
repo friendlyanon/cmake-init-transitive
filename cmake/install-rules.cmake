@@ -30,8 +30,6 @@ install(
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 )
 
-configure_file(cmake/install-config.cmake.in "${package}Config.cmake" @ONLY)
-
 write_basic_package_version_file(
     "${package}ConfigVersion.cmake"
     COMPATIBILITY SameMajorVersion
@@ -45,9 +43,14 @@ set(
 mark_as_advanced(transitive_INSTALL_CMAKEDIR)
 
 install(
-    FILES
-    "${PROJECT_BINARY_DIR}/${package}Config.cmake"
-    "${PROJECT_BINARY_DIR}/${package}ConfigVersion.cmake"
+    FILES cmake/install-config.cmake
+    DESTINATION "${transitive_INSTALL_CMAKEDIR}"
+    RENAME "${package}Config.cmake"
+    COMPONENT transitive_Development
+)
+
+install(
+    FILES "${PROJECT_BINARY_DIR}/${package}ConfigVersion.cmake"
     DESTINATION "${transitive_INSTALL_CMAKEDIR}"
     COMPONENT transitive_Development
 )

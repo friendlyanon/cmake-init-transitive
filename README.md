@@ -17,15 +17,14 @@ installed config file to propagate dependencies.
 * [Link to the dependencies](CMakeLists.txt#L62) according to your requirements
   (`PRIVATE` is *build* requirement, `INTERFACE` is *usage* requirement,
   `PUBLIC` is both)
-* Make the [install config](cmake/install-config.cmake.in) configurable based
-  on [`BUILD_SHARED_LIBS`][4] and propagate dependencies according to their
-  requirement using [`find_dependency`][5]
+* Make the [install config](cmake/install-config.cmake) enumerate the packages
+  from above, but using [`find_dependency`][4] instead
 
-Making your config file configurable based on `BUILD_SHARED_LIBS` is necessary
-only if you have dependencies that are only build requirements.
+Enumerating the dependencies is necessary even if the dependency is otherwise
+an internal implementation detail and is not otherwise exposed in the library
+interface.
 
 [1]: https://github.com/friendlyanon/cmake-init
 [2]: https://github.com/friendlyanon/cmake-init-multi-target
 [3]: https://github.com/friendlyanon/cmake-init-use-pkg-config
-[4]: https://cmake.org/cmake/help/latest/variable/BUILD_SHARED_LIBS.html
-[5]: https://cmake.org/cmake/help/latest/module/CMakeFindDependencyMacro.html
+[4]: https://cmake.org/cmake/help/latest/module/CMakeFindDependencyMacro.html
