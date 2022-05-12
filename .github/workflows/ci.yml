@@ -19,7 +19,7 @@ jobs:
 
     - name: Install vcpkg
       uses: friendlyanon/setup-vcpkg@v1
-      with: { committish: 14543ba18235846803ab1d3534cf2f63c6024b20 }
+      with: { committish: bae8f8c7d837c631ca72daec4b14e243824135a5 }
 
     - name: Configure
       run: "cmake --preset=ci-windows
